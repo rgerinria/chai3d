@@ -179,6 +179,9 @@
     #define C_ENABLE_DELTA_DEVICE_SUPPORT
     #define C_ENABLE_PHANTOM_DEVICE_SUPPORT
     #define C_ENABLE_LEAP_DEVICE_SUPPORT
+    #if defined(C_HAS_SPNAV)
+        #define C_ENABLE_SPACEMOUSE_DEVICE_SUPPORT
+    #endif
     // #define C_ENABLE_SIXENSE_DEVICE_SUPPORT
 
     //--------------------------------------------------------------------
@@ -213,6 +216,9 @@
     #define C_ENABLE_DELTA_DEVICE_SUPPORT
     #define C_ENABLE_PHANTOM_DEVICE_SUPPORT
     #define C_ENABLE_LEAP_DEVICE_SUPPORT
+    #if defined(C_HAS_SPNAV)
+        #define C_ENABLE_SPACEMOUSE_DEVICE_SUPPORT
+    #endif
     // #define C_ENABLE_SIXENSE_DEVICE_SUPPORT
 
 #endif

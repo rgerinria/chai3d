@@ -87,6 +87,14 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${PROJECT_SOURCE_DIR}/bin/${O
 find_package (OpenGL REQUIRED)
 include_directories (OPENGL_INCLUDE_DIR)
 
+# Optional SpaceMouse dependency
+find_path (SPNAV_INCLUDE_DIR spnav.h)
+find_library (SPNAV_LIBRARY spnav)
+if (SPNAV_INCLUDE_DIR AND SPNAV_LIBRARY)
+  set (PROJECT_DEFINITIONS ${PROJECT_DEFINITIONS} -DC_HAS_SPNAV)
+  include_directories (${SPNAV_INCLUDE_DIR})
+endif ()
+
 # on non-Windows, DHD dependency
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
   include_directories (${PROJECT_SOURCE_DIR}/external/DHD/include)
@@ -191,6 +199,13 @@ add_definitions (${PROJECT_DEFINITIONS} -DGLEW_STATIC -DAL_ALEXT_PROTOTYPES -DAL
 
 # static library
 add_library (chai3d STATIC ${source} ${source_eigen} ${source_gif} ${source_glew} ${source_3ds} ${source_jpeg} ${source_png} ${source_pugixml} ${source_openal} ${source_theora})
+target_link_libraries (chai3d PUBLIC ${OPENGL_LIBRARIES})
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
+  target_link_libraries (chai3d PUBLIC drd)
+  if (SPNAV_LIBRARY)
+    target_link_libraries (chai3d PUBLIC ${SPNAV_LIBRARY})
+  endif ()
+endif ()
 
 # library exports
 set (CHAI3D_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" "${PROJECT_SOURCE_DIR}/external/Eigen" "${PROJECT_SOURCE_DIR}/external/glew/include" "${OPENGL_INCLUDE_DIR}")
@@ -198,6 +213,9 @@ set (CHAI3D_LIBRARIES chai3d ${OPENGL_LIBRARIES})
 set (CHAI3D_DEFINITIONS ${PROJECT_DEFINITIONS})
 if (NOT ${CMAKE_SYSTEM_NAME} MATCHES Windows)
   set (CHAI3D_LIBRARIES ${CHAI3D_LIBRARIES} drd)
+  if (SPNAV_LIBRARY)
+    set (CHAI3D_LIBRARIES ${CHAI3D_LIBRARIES} ${SPNAV_LIBRARY})
+  endif ()
   set (CHAI3D_LIBRARY_DIRS ${CHAI3D_LIBRARY_DIRS} ${DHD_LIBRARY_DIRS})
 else ()
   set (CHAI3D_LIBRARIES ${CHAI3D_LIBRARIES} winmm)
