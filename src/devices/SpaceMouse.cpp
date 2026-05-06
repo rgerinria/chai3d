@@ -446,10 +446,10 @@ bool SpaceMouse::getPosition(cVector3d& a_position)
         case SPNAV_EVENT_MOTION:
             haptic_twist_state_[0] = sev.motion.z / full_scale;
             haptic_twist_state_[1] = -sev.motion.x / full_scale;
-            haptic_twist_state_[2] = -sev.motion.y / full_scale;
+            haptic_twist_state_[2] = sev.motion.y / full_scale;
             haptic_twist_state_[3] = sev.motion.rz / full_scale; //roll
             haptic_twist_state_[4] = -sev.motion.rx / full_scale; //pitch
-            haptic_twist_state_[5] = -sev.motion.ry / full_scale; //yaw
+            haptic_twist_state_[5] = sev.motion.ry / full_scale; //yaw
             break;
         case SPNAV_EVENT_BUTTON:
             if (sev.button.bnum < static_cast<int>(buttons.size())) {
